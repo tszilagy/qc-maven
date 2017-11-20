@@ -1,0 +1,297 @@
+<xsd:schema xmlns="http://org.freakode.qc" targetNamespace="http://org.freakode.qc"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"   xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+	jaxb:version="2.1" jaxb:extensionBindingPrefixes="inheritance" elementFormDefault="qualified">
+
+	<!-- <xsd:import namespace="http://pegasus/framework/core/bean" -->
+	<!-- schemaLocation="xsdcat:pegasus.framework.pdk.pegasus:pegasus-core/META-INF/types/pegasus.framework.core.bean.xsd" 
+		/> -->
+
+
+	<xsd:element name="Entities">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>General entities collection in ALM.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element ref="Entity" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="TotalResults" type="xsd:int" use="required">
+				<xsd:annotation>
+					<xsd:documentation>
+						The count of entity instances in the collection.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="Entity">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:appinfo>
+  	            	<inheritance:implements>java.lang.Cloneable</inheritance:implements>
+				</xsd:appinfo>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element name="Fields" type="FieldsComplexType" />
+				<xsd:element name="RelatedEntities" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>
+							The collection of related entities referenced
+							from this entity
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="Relation" minOccurs="0" maxOccurs="unbounded" />
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="Type" type="xsd:string" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="Relation">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="Entity" />
+			</xsd:sequence>
+			<xsd:attribute name="Alias" type="xsd:string" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="FieldComplexType">
+		<xsd:sequence>
+			<xsd:element name="Value" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:string">
+							<xsd:attribute name="Alias" type="xsd:string" use="optional" />
+							<xsd:attribute name="ReferenceValue" type="xsd:string"
+								use="optional" />
+						</xsd:extension>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="Name" use="required" />
+	</xsd:complexType>
+
+	<xsd:complexType name="FieldsComplexType">
+		<xsd:sequence>
+			<xsd:element name="Field" type="FieldComplexType"
+				maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="EntityDescriptor" type="EntityDescriptorComplexType" />
+
+	<xsd:complexType name="EntityDescriptorComplexType">
+		<xsd:annotation>
+			<xsd:documentation>The metadata on an entity type.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="Table" />
+			<xsd:element ref="Name" />
+			<xsd:element ref="Label" />
+			<xsd:element ref="SupportsHistory" />
+			<xsd:element ref="SupportsMultiValue" />
+			<xsd:element ref="SupportsWorkflow" />
+			<xsd:element ref="SupportsDataHidingFilter" />
+			<xsd:element ref="SupportsVC" />
+			<xsd:element ref="SupportsSubtypes" />
+			<xsd:element ref="SupportsTextSearch" />
+			<xsd:element ref="SupportsStorage" />
+			<xsd:element ref="HierarchicalRootId" minOccurs="0" />
+			<xsd:element ref="ExtensionName" minOccurs="0" />
+			<xsd:element ref="IsSiteEntity" />
+			<xsd:element ref="Attributes" />
+			<xsd:element ref="TablePrefix" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="Attribute">
+		<xsd:annotation>
+			<xsd:documentation>
+				A key-value meta-data element.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="xsd:string">
+					<xsd:attribute name="name" type="xsd:string" />
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="Attributes">
+		<xsd:annotation>
+			<xsd:documentation>
+				A collection of attributes primarily for use by
+				extensions. ALM does
+				not use values created by
+				extension.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="Attribute" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="ExtensionName" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>
+				The name of the extension if the descriptor
+				applies to an extension.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="HierarchicalRootId" type="xsd:int">
+		<xsd:annotation>
+			<xsd:documentation>
+				The ID of the root element for hierarchical
+				Entities
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="IsSiteEntity" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>
+				A value of Y indicates that the entity can be
+				shared between
+				projects.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="Label" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>
+				The display name. The display name can be
+				customized and localized.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="Name" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>
+				The logical name of the entity.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="SupportsDataHidingFilter" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>
+				A value of Y indicates that this entity's fields
+				can be part of a
+				data hiding filter.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="SupportsHistory" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>
+				A value of Y indicates that this entity's fields
+				can be customized in
+				the user interface to support
+				history.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="SupportsMultiValue" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>
+				A value of Y indicates that this entity's fields
+				can be customized in
+				the user interface to support
+				multiple values.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="SupportsStorage" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>
+				A value of Y indicates that this entity supports
+				storage.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="SupportsSubtypes" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>
+				A value of Y indicates that there can be subtypes
+				of this entity.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="SupportsTextSearch" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>
+				A value of Y indicates that this entity's fields
+				are support text
+				search.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="SupportsVC" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>
+				A value of Y indicates that versions of this
+				entity can be saved if
+				version control is enabled for the
+				project.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="SupportsWorkflow" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>
+				A value of Y indicates that events on this entity
+				can be handled in
+				the workflow module.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="TablePrefix" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>
+				The prefix for database table containing the
+				entity.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="Table" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>
+				The name of the database table containing the
+				entity.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:simpleType name="AttributeSimpleType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="false" />
+			<xsd:enumeration value="true" />
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
